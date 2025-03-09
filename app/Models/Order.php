@@ -70,9 +70,9 @@ class Order extends Model
 		return $this->belongsTo(Voucher::class);
 	}
 
-	public function my_user()
+	public function user()
 	{
-		return $this->belongsTo(MyUser::class, 'user_id');
+		return $this->belongsTo(User::class, 'user_id');
 	}
 
 	public function order_details()

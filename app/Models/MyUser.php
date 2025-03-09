@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $provider
  * @property string $username
  * 
+ * @property Collection|MyUserRole[] $my_user_roles
  * @property Collection|Order[] $orders
- * @property Collection|UserRole[] $user_roles
  *
  * @package App\Models
  */
@@ -45,13 +45,13 @@ class MyUser extends Model
 		'username'
 	];
 
+	public function my_user_roles()
+	{
+		return $this->hasMany(MyUserRole::class, 'user_id');
+	}
+
 	public function orders()
 	{
 		return $this->hasMany(Order::class, 'user_id');
-	}
-
-	public function user_roles()
-	{
-		return $this->hasMany(UserRole::class, 'user_id');
 	}
 }
