@@ -14,7 +14,8 @@
                         <a class="btn btn-default add-to-cart">
                             <i class="fa fa-shopping-cart"></i> Bỏ Vào Giỏ
                         </a>
-                        <a class="btn btn-default add-to-cart">
+                        <a href='{{ route('products.show', ['id' => $product->id]) }}'
+                            class="btn btn-default add-to-cart">
                             <i class="fa fa-info-circle"></i> Xem Chi Tiết
                         </a>
                     </div>

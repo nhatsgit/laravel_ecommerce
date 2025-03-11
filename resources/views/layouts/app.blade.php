@@ -68,10 +68,29 @@
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
 
-                                <li><a href="cart.html"></i> Xin chào userxsd</a></li>
-                                <li><a href="login.html"><i class="fa fa-lock"></i> Đăng nhập</a></li>
-                                <li><a href="login.html"><i class="fa fa-lock"></i> Đăng ký</a></li>
-                                <li><a href="login.html"><i class="fa fa-lock"></i> Đăng xuất</a></li>
+                                <li>
+                                    @auth
+                                        <a href="cart.html">Xin chào {{ Auth::user()->name }}</a>
+                                    @endauth
+                                </li>
+
+                                @guest
+                                    <li><a href="{{ route('login') }}"><i class="fa fa-lock"></i> Đăng nhập</a></li>
+                                    <li><a href="{{ route('register') }}"><i class="fa fa-lock"></i> Đăng ký</a></li>
+                                @endguest
+
+                                @auth
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="fa fa-lock"></i> Đăng xuất
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </li>
+                                @endauth
                             </ul>
                         </div>
                     </div>
@@ -97,7 +116,7 @@
                                 <li><a href="/" class="active">Home</a></li>
                                 <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
+                                        <li><a href="{{ route('products.index') }}">Products</a></li>
                                         <li><a href="product-details.html">Product Details</a></li>
                                         <li><a href="checkout.html">Checkout</a></li>
                                         <li><a href="cart.html">Cart</a></li>
@@ -116,11 +135,21 @@
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <div class="search_box pull-right">
-                            <input type="text" style="width: 300px;background-position:260px"
-                                placeholder="Search" />
-                        </div>
+                        <form action="{{ route('products.index') }}" method="GET"
+                            style="position: relative; display: flex;">
+                            <input type="text" name="keyword" class="form-control"
+                                style="width: 300px; padding-right: 45px;" placeholder="Search"
+                                value="{{ request('keyword') }}">
+                            <button type="submit"
+                                style="position: absolute; right: 0; top: 0; height: 100%; width: 40px; 
+                           border: none; background: #f0f0f0; cursor: pointer; display: flex; 
+                           align-items: center; justify-content: center;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
                     </div>
+
+
                 </div>
             </div>
         </div><!--/header-bottom-->
