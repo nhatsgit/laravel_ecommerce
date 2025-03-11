@@ -15,15 +15,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
+
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products', 'index')->name('products.index'); // Danh sách sản phẩm
+    Route::get('/products/{id}', 'show')->name('products.show'); // Chi tiết sản phẩm
+});
+
+Route::get('/', [HomeController::class, 'index']);
+
 
 Route::get('/admin', [AdminController::class, 'index'])->middleware('role:admin');
 Route::get('/staff', [StaffController::class, 'index'])->middleware('role:staff');
 Route::get('/customer', [CustomerController::class, 'index'])->middleware('role:customer');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 

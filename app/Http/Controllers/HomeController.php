@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $products = Product::inRandomOrder()->limit(12)->get(); // Lấy 12 sản phẩm ngẫu nhiên cho danh sách chính
+        $sliderProducts = Product::inRandomOrder()->limit(3)->get(); // Lấy 3 sản phẩm ngẫu nhiên cho slider
+
+        return view('home', [
+            'products' => $products,
+            'sliderProducts' => $sliderProducts
+        ]);
     }
 }
