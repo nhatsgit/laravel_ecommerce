@@ -52,10 +52,51 @@
                     <x-product-list :products="$products" :uiSize="4" />
                 </div>
 
-                <!-- Phân trang -->
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $products->links() }}
-                </div>
+                <ul class="pagination">
+                    {{-- Nút Previous --}}
+                    @if ($products->onFirstPage())
+                        <li class="disabled"><span>&laquo;</span></li>
+                    @else
+                        <li><a href="{{ $products->previousPageUrl() }}">&laquo;</a></li>
+                    @endif
+
+                    {{-- Hiển thị trang đầu tiên nếu cần --}}
+                    @if ($products->currentPage() > 3)
+                        <li><a href="{{ $products->url(1) }}">1</a></li>
+                        <li class="disabled"><span>...</span></li>
+                    @endif
+
+                    {{-- Nếu còn cách trang cuối hơn 6 trang, chỉ hiển thị trang hiện tại ±2 --}}
+                    @if ($products->currentPage() < $products->lastPage() - 6)
+                        @for ($i = max(1, $products->currentPage() - 2); $i <= min($products->currentPage() + 2, $products->lastPage()); $i++)
+                            <li class="{{ $i == $products->currentPage() ? 'active' : '' }}">
+                                <a href="{{ $products->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                        <li class="disabled"><span>...</span></li>
+                        {{-- Hiển thị 5 trang cuối cùng --}}
+                        @for ($i = $products->lastPage() - 4; $i <= $products->lastPage(); $i++)
+                            <li class="{{ $i == $products->currentPage() ? 'active' : '' }}">
+                                <a href="{{ $products->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                    @else
+                        {{-- Hiển thị tất cả trang nếu gần cuối --}}
+                        @for ($i = max(1, $products->currentPage() - 2); $i <= $products->lastPage(); $i++)
+                            <li class="{{ $i == $products->currentPage() ? 'active' : '' }}">
+                                <a href="{{ $products->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                    @endif
+
+                    {{-- Nút Next --}}
+                    @if ($products->hasMorePages())
+                        <li><a href="{{ $products->nextPageUrl() }}">&raquo;</a></li>
+                    @else
+                        <li class="disabled"><span>&raquo;</span></li>
+                    @endif
+                </ul>
+
             </div>
         </div>
     </div>

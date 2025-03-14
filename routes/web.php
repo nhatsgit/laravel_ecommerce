@@ -16,8 +16,17 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Customer\ProductController;
+use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
+
+
+Route::controller(CartController::class)->group(function () {
+    Route::post('/cart/add', 'add')->name('cart.add'); // Thêm vào giỏ hàng
+    Route::get('/cart', 'index')->name('cart.index'); // Hiển thị giỏ hàng
+    Route::post('/cart/remove', 'remove')->name('cart.remove'); // Xóa sản phẩm khỏi giỏ
+    Route::post('/cart/update', 'update')->name('cart.update'); // Cập nhật số lượng
+});
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index'); // Danh sách sản phẩm
