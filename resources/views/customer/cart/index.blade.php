@@ -12,6 +12,8 @@
 
             @if (session('cart') && count(session('cart')) > 0)
                 <form action="{{ route('cart.update') }}" method="POST">
+                    @csrf <!-- Thêm dòng này để Laravel xác thực form -->
+
                     <div class="table-responsive cart_info">
                         <table class="table table-condensed">
                             <thead>
@@ -48,7 +50,6 @@
                                             <p>{{ number_format($item['price'], 0, ',', '.') }} VND</p>
                                         </td>
                                         <td>
-
                                             <input type="number" name="quantities[{{ $id }}]"
                                                 value="{{ $item['quantity'] }}" min="1" style="width: 60px;">
                                         </td>
@@ -56,13 +57,9 @@
                                             <p class="cart_total_price">{{ number_format($subtotal, 0, ',', '.') }} VND</p>
                                         </td>
                                         <td class="cart_delete">
-                                            <form action="{{ route('cart.remove') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="product_id" value="{{ $id }}">
-                                                <button type="submit" class="cart_quantity_delete">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                            </form>
+                                            <a href="{{ route('cart.remove', $id) }}" class="cart_quantity_delete">
+                                                <i class="fa fa-times"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -72,10 +69,18 @@
 
                     <div class="text-right">
                         <h3>Total: {{ number_format($total, 0, ',', '.') }} VND</h3>
-                        {{-- <a href="{{ route('checkout') }}" class="btn btn-success">Proceed to Checkout</a> --}}
                     </div>
-                    <button type="submit" class="btn btn-primary">Cập nhật giỏ hàng</button>
-                    <a href="#" class="btn btn-success">Thanh toán</a>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary">Cập nhật giỏ hàng</button>
+
+                        <a href="{{ route('cart.checkout') }}">
+                            <button type="button" class="btn btn-primary" style="background-color: green;">
+                                Thanh toán
+                            </button>
+                        </a>
+                    </div>
+
                 </form>
             @else
                 <h3 class="text-center">Giỏ hàng trống</h3>

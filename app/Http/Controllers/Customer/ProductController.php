@@ -30,7 +30,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('product_images')->findOrFail($id);
         return view('customer.products.show', compact('product'));
     }
 }

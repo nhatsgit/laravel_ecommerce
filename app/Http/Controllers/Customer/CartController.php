@@ -8,6 +8,10 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only('checkout');
+    }
     public function add(Request $request)
     {
         $productId = $request->input('product_id');
@@ -29,7 +33,7 @@ class CartController extends Controller
             // Thêm sản phẩm vào giỏ hàng
             $cart[$productId] = [
                 'name' => $product->name,
-                'price' => $product->price,
+                'price' => $product->price * (1 - $product->phan_tram_giam / 100),
                 'quantity' => $quantity,
                 'img_url' => $product->img_url ?? 'default.jpg',
             ];
@@ -46,21 +50,27 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
         return view('customer.cart.index', compact('cart'));
     }
-    public function remove(Request $request)
+    public function checkout()
+    {
+
+        $cart = session()->get('cart', []);
+        return view('customer.cart.checkout', compact('cart'));
+    }
+    public function remove($productId)
     {
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$request->product_id])) {
-            unset($cart[$request->product_id]);
+        if (isset($cart[$productId])) {
+            unset($cart[$productId]); // Xóa sản phẩm khỏi giỏ
             session()->put('cart', $cart);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Đã xoá sản phẩm khỏi giỏ!');
+        return redirect()->route('cart.index')->with('success', 'Sản phẩm đã được xóa khỏi giỏ hàng!');
     }
     public function update(Request $request)
     {
-        $cart = session()->get('cart', []);
 
+        $cart = session()->get('cart', []);
         foreach ($request->input('quantities') as $productId => $quantity) {
             if (isset($cart[$productId])) {
                 $cart[$productId]['quantity'] = max(1, $quantity); // Đảm bảo số lượng >= 1

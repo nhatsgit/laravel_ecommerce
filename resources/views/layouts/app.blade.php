@@ -123,29 +123,46 @@
                                         <li><a href="login.html">Login</a></li>
                                     </ul>
                                 </li>
-                                <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
-                                        <li><a href="blog-single.html">Blog Single</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="404.html">404</a></li>
+                                <li><a href="{{ route('myorders') }}">Đơn hàng</a></li>
+
+                                <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
                                 <li><a href="contact-us.html">Contact</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <form action="{{ route('products.index') }}" method="GET"
-                            style="position: relative; display: flex;">
+                            style="position: relative; display: flex; flex-direction: column;">
                             <input type="text" name="keyword" class="form-control"
-                                style="width: 300px; padding-right: 45px;" placeholder="Search"
-                                value="{{ request('keyword') }}">
+                                style="width: 270px; padding-right: 45px;" placeholder="Search"
+                                value="{{ request('keyword') }}" onfocus="showDropdown()" oninput="showDropdown()">
                             <button type="submit"
                                 style="position: absolute; right: 0; top: 0; height: 100%; width: 40px; 
-                           border: none; background: #f0f0f0; cursor: pointer; display: flex; 
-                           align-items: center; justify-content: center;">
+           border: none; background: #f0f0f0; cursor: pointer; display: flex; 
+           align-items: center; justify-content: center;">
                                 <i class="fa fa-search"></i>
                             </button>
+
+                            <ul id="suggestions"
+                                style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; 
+    border: 1px solid #ddd; list-style: none; padding: 5px; margin: 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999;">
+                                <li style="padding: 8px; cursor: pointer;"
+                                    onmouseover="this.style.background='#f0f0f0'"
+                                    onmouseout="this.style.background='white'">
+                                    Sản phẩm A
+                                </li>
+                                <li style="padding: 8px; cursor: pointer;"
+                                    onmouseover="this.style.background='#f0f0f0'"
+                                    onmouseout="this.style.background='white'">
+                                    Sản phẩm B
+                                </li>
+                                <li style="padding: 8px; cursor: pointer;"
+                                    onmouseover="this.style.background='#f0f0f0'"
+                                    onmouseout="this.style.background='white'">
+                                    Sản phẩm C
+                                </li>
+                            </ul>
                         </form>
                     </div>
 
@@ -323,7 +340,18 @@
 
     </footer><!--/Footer-->
 
+    <script>
+        function showDropdown() {
+            document.getElementById("suggestions").style.display = "block";
+        }
 
+        document.addEventListener("click", function(event) {
+            var dropdown = document.getElementById("suggestions");
+            if (!event.target.closest("form")) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
 
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
