@@ -16,7 +16,6 @@
                                     <td class="price">Price</td>
                                     <td class="quantity">Quantity</td>
                                     <td class="total">Total</td>
-                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,16 +43,13 @@
                                         </td>
                                         <td>
                                             <input type="number" name="quantities[{{ $id }}]"
-                                                value="{{ $item['quantity'] }}" min="1" style="width: 60px;">
+                                                value="{{ $item['quantity'] }}" min="1" style="width: 60px;"
+                                                readonly>
                                         </td>
                                         <td class="cart_total">
                                             <p class="cart_total_price">{{ number_format($subtotal, 0, ',', '.') }} VND</p>
                                         </td>
-                                        <td class="cart_delete">
-                                            <a href="{{ route('cart.remove', $id) }}" class="cart_quantity_delete">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -64,31 +60,31 @@
                 </div>
             </div>
         </section>
+        @if (session('cart') && count(session('cart')) > 0)
+            <h1>Place Your Order</h1>
+            <form action="{{ route('myorders.create') }}" method="post">
+                @csrf
+                <div class="mb-3">
+                    <label for="customerName" class="form-label">Tên:</label>
+                    <input type="text" value="{{ auth()->user()->fullName }}" id="customerName" name="customerName"
+                        class="form-control" required>
 
-        <h1>Place Your Order</h1>
-        <form action="{{ route('myorders.create') }}" method="post">
-            @csrf
-            <div class="mb-3">
-                <label for="customerName" class="form-label">Tên:</label>
-                <input type="text" value="{{ auth()->user()->fullName }}" id="customerName" name="customerName"
-                    class="form-control" required>
+                    <label for="address" class="form-label">Địa chỉ:</label>
+                    <input type="text" value="{{ auth()->user()->address }}" id="address" name="address"
+                        class="form-control" required>
 
-                <label for="address" class="form-label">Địa chỉ:</label>
-                <input type="text" value="{{ auth()->user()->address }}" id="address" name="address"
-                    class="form-control" required>
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" value="{{ auth()->user()->email }}" id="email" name="email"
+                        class="form-control" required>
 
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" value="{{ auth()->user()->email }}" id="email" name="email"
-                    class="form-control" required>
+                    <label for="phoneNumber" class="form-label">SĐT:</label>
+                    <input type="text" value="{{ auth()->user()->phone }}" id="phoneNumber" name="phoneNumber"
+                        class="form-control" required>
 
-                <label for="phoneNumber" class="form-label">SĐT:</label>
-                <input type="text" value="{{ auth()->user()->phone }}" id="phoneNumber" name="phoneNumber"
-                    class="form-control" required>
+                    <label for="note" class="form-label">Ghi chú:</label>
+                    <input type="text" id="note" name="note" value="Đặt Hàng" class="form-control" required>
 
-                <label for="note" class="form-label">Ghi chú:</label>
-                <input type="text" id="note" name="note" value="Đặt Hàng" class="form-control" required>
-
-                {{-- <!-- Button chọn mã giảm giá -->
+                    {{-- <!-- Button chọn mã giảm giá -->
                 <button type="button" id="openModalBtn" onclick="openPopup()"
                     style="background: none; border: 1px solid green; color:green">
                     Chọn mã giảm giá
@@ -135,22 +131,23 @@
                 <strong style="color:green" id="voucherInfo"></strong>
                 <br> --}}
 
-                <label for="options">Thanh Toán:</label>
-                <select name="payment" id="options">
-                    <option value="Trực tiếp">Trực Tiếp</option>
-                    <option value="Online">Online</option>
-                </select>
-            </div>
+                    <label for="options">Thanh Toán:</label>
+                    <select name="payment" id="options">
+                        <option value="Trực tiếp">Trực Tiếp</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
 
-            <label>Chi tiết thanh toán</label>
-            {{-- <p>Tổng đơn hàng: {{ number_format($totalPrice, 0, ',', '.') }}₫</p>
+                <label>Chi tiết thanh toán</label>
+                {{-- <p>Tổng đơn hàng: {{ number_format($totalPrice, 0, ',', '.') }}₫</p>
             <input type="hidden" id="totalPriceText" value="{{ $totalPrice }}">
             <p id="percentDiscount">Giảm giá đơn hàng: 0 ₫</p> --}}
-            <h3 style="color:green" id="totalOrderPrice">
-                Tổng thanh toán: {{ number_format($total, 0, ',', '.') }}₫
-            </h3>
+                <h3 style="color:green" id="totalOrderPrice">
+                    Tổng thanh toán: {{ number_format($total, 0, ',', '.') }}₫
+                </h3>
 
-            <button type="submit" class="btn btn-primary">Submit Order</button>
-        </form>
+                <button type="submit" class="btn btn-primary">Submit Order</button>
+            </form>
+        @endif
     </section>
 @endsection

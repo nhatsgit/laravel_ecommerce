@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Customer;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductManagementController extends Controller
 {
     public function index(Request $request)
     {
@@ -47,7 +47,7 @@ class ProductController extends Controller
         // Phân trang và giữ lại các tham số khi phân trang
         $products = $query->orderByDesc('id')->paginate(9)->appends($request->all());
 
-        return view('customer.products.index', compact('products', 'categories'));
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
 
@@ -56,17 +56,5 @@ class ProductController extends Controller
     {
         $product = Product::with('product_images')->findOrFail($id);
         return view('customer.products.show', compact('product'));
-    }
-    public function searchSuggestions(Request $request)
-    {
-        $keyword = $request->input('keyword');
-
-        // Tìm sản phẩm có tên chứa keyword, giới hạn 5 sản phẩm
-        $products = Product::where('name', 'like', "%$keyword%")
-            ->limit(5)
-            ->orderByDesc('id')
-            ->get(['id', 'name']);
-
-        return response()->json($products);
     }
 }

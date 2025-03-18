@@ -5,41 +5,44 @@
         <div class="row">
             <!-- Cột category chiếm 3/12 -->
             <div class="col-md-3 text-center">
-                <div class="panel-group category-products" id="categoryView">
+                <form method="GET" action="{{ route('products.index') }}">
                     <h2>Danh mục</h2>
-                    @foreach ($categories as $category)
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title" style="color: gray;">
-                                    <input type="radio" id="option{{ $category->id }}" name="category"
-                                        value="{{ $category->id }}" />
-                                    {{ $category->name }}
-                                </h4>
+                    <div class="panel-group category-products" id="categoryView">
+                        @foreach ($categories as $category)
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title" style="color: gray;">
+                                        <input type="radio" name="category" value="{{ $category->id }}"
+                                            {{ request('category') == $category->id ? 'checked' : '' }} />
+                                        {{ $category->name }}
+                                    </h4>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div className="price-range">
-                    <div className="well">
-                        <h2>Tầm Giá</h2>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><input id="minPrice" type="number" min="1000" value={minPrice}
-                                            style="width: 100px" placeholder="Từ ₫" />
-                                    </td>
-                                    <td>&mdash;</td>
-                                    <td><input id="maxPrice" type="number" min="1000" value={maxPrice}
-                                            style="width: 100px" placeholder="Đến ₫" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br></br>
-                        <button type="button">Lọc</button>
+                        @endforeach
                     </div>
-                </div>
+
+                    <h2>Tầm Giá</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><input name="minPrice" type="number" min="1000" value="{{ request('minPrice') }}"
+                                        style="width: 100px" placeholder="Từ ₫" /></td>
+                                <td>&mdash;</td>
+                                <td><input name="maxPrice" type="number" min="1000" value="{{ request('maxPrice') }}"
+                                        style="width: 100px" placeholder="Đến ₫" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <button type="submit" class="btn btn-primary" style="background-color: green">Lọc</button>
+                    <button type="button" class="btn btn-primary">
+                        <a href="{{ route('products.index') }}" style="color: white">
+                            Xóa bộ lọc
+                        </a>
+                    </button>
+
+                </form>
+
                 <div className="shipping text-center">
                     <img src="{{ asset('images/home/shipping.jpg') }}" alt="" />
                 </div>
@@ -48,7 +51,7 @@
             <!-- Cột products chiếm 9/12 -->
             <div class="col-md-9">
                 <div class="features_items">
-                    <h2 style="text-transform: capitalize;" class="title text-center">Gợi ý hôm nay</h2>
+                    <h2 style="text-transform: capitalize;" class="title text-center">Danh sách sản phẩm</h2>
                     <x-product-list :products="$products" :uiSize="4" />
                 </div>
 

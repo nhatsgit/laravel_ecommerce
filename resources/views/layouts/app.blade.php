@@ -111,10 +111,11 @@
                                 <span class="icon-bar"></span>
                             </button>
                         </div>
-                        <div class="mainmenu pull-left">
-                            <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="/" class="active">Home</a></li>
-                                <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
+                        @if (auth()->check() && auth()->user()->role === 'admin')
+                            <div class="mainmenu pull-left">
+                                <ul class="nav navbar-nav collapse navbar-collapse">
+                                    <li><a href="/" class="active">Admin</a></li>
+                                    {{-- <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="{{ route('products.index') }}">Products</a></li>
                                         <li><a href="product-details.html">Product Details</a></li>
@@ -122,46 +123,54 @@
                                         <li><a href="cart.html">Cart</a></li>
                                         <li><a href="login.html">Login</a></li>
                                     </ul>
-                                </li>
-                                <li><a href="{{ route('myorders') }}">Đơn hàng</a></li>
+                                </li> --}}
+                                    <li><a href="{{ route('products.index') }}">Sản phẩm</a></li>
+                                    <li><a href="{{ route('myorders') }}">Đơn hàng</a></li>
 
-                                <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
-                                <li><a href="contact-us.html">Contact</a></li>
-                            </ul>
-                        </div>
+                                    <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
+                                    <li><a href="contact-us.html">Contact</a></li>
+                                </ul>
+                            </div>
+                        @else
+                            <div class="mainmenu pull-left">
+                                <ul class="nav navbar-nav collapse navbar-collapse">
+                                    <li><a href="/" class="active">Trang chủ</a></li>
+                                    {{-- <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
+                                    <ul role="menu" class="sub-menu">
+                                        <li><a href="{{ route('products.index') }}">Products</a></li>
+                                        <li><a href="product-details.html">Product Details</a></li>
+                                        <li><a href="checkout.html">Checkout</a></li>
+                                        <li><a href="cart.html">Cart</a></li>
+                                        <li><a href="login.html">Login</a></li>
+                                    </ul>
+                                </li> --}}
+                                    <li><a href="{{ route('products.index') }}">Sản phẩm</a></li>
+                                    <li><a href="{{ route('myorders') }}">Đơn hàng</a></li>
+
+                                    <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
+                                    <li><a href="contact-us.html">Contact</a></li>
+                                </ul>
+                            </div>
+                        @endif
+
                     </div>
                     <div class="col-sm-3">
-                        <form action="{{ route('products.index') }}" method="GET"
-                            style="position: relative; display: flex; flex-direction: column;">
-                            <input type="text" name="keyword" class="form-control"
-                                style="width: 270px; padding-right: 45px;" placeholder="Search"
-                                value="{{ request('keyword') }}" onfocus="showDropdown()" oninput="showDropdown()">
+                        <form action="{{ route('products.index') }}" method="GET" style="position: relative;">
+                            <input type="text" id="searchInput" name="keyword" class="form-control"
+                                style="width: 270px; padding-right: 45px;" placeholder="Tìm kiếm sản phẩm..."
+                                value="{{ request('keyword') }}" oninput="fetchSuggestions()">
+
                             <button type="submit"
                                 style="position: absolute; right: 0; top: 0; height: 100%; width: 40px; 
-           border: none; background: #f0f0f0; cursor: pointer; display: flex; 
-           align-items: center; justify-content: center;">
+            border: none; background: #f0f0f0; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center;">
                                 <i class="fa fa-search"></i>
                             </button>
 
                             <ul id="suggestions"
                                 style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; 
-    border: 1px solid #ddd; list-style: none; padding: 5px; margin: 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 9999;">
-                                <li style="padding: 8px; cursor: pointer;"
-                                    onmouseover="this.style.background='#f0f0f0'"
-                                    onmouseout="this.style.background='white'">
-                                    Sản phẩm A
-                                </li>
-                                <li style="padding: 8px; cursor: pointer;"
-                                    onmouseover="this.style.background='#f0f0f0'"
-                                    onmouseout="this.style.background='white'">
-                                    Sản phẩm B
-                                </li>
-                                <li style="padding: 8px; cursor: pointer;"
-                                    onmouseover="this.style.background='#f0f0f0'"
-                                    onmouseout="this.style.background='white'">
-                                    Sản phẩm C
-                                </li>
+            border: 1px solid #ddd; list-style: none; padding: 5px; margin: 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 9999;">
                             </ul>
                         </form>
                     </div>
@@ -341,16 +350,41 @@
     </footer><!--/Footer-->
 
     <script>
-        function showDropdown() {
-            document.getElementById("suggestions").style.display = "block";
-        }
+        function fetchSuggestions() {
 
-        document.addEventListener("click", function(event) {
-            var dropdown = document.getElementById("suggestions");
-            if (!event.target.closest("form")) {
-                dropdown.style.display = "none";
+            let keyword = document.getElementById('searchInput').value;
+            let suggestionsBox = document.getElementById('suggestions');
+            if (keyword.length < 1) {
+                suggestionsBox.style.display = 'none';
+
+                return;
             }
-        });
+
+            fetch(`/products/suggestions?keyword=${keyword}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsBox.innerHTML = '';
+                    if (data.length > 0) {
+                        data.forEach(product => {
+                            let li = document.createElement('li');
+                            li.textContent = product.name;
+                            li.style.padding = '8px';
+                            li.style.cursor = 'pointer';
+                            li.onmouseover = () => (li.style.background = '#f0f0f0');
+                            li.onmouseout = () => (li.style.background = 'white');
+                            li.onclick = () => {
+                                document.getElementById('searchInput').value = product.name;
+                                suggestionsBox.style.display = 'none';
+                            };
+                            suggestionsBox.appendChild(li);
+                        });
+                        suggestionsBox.style.display = 'block';
+                    } else {
+                        suggestionsBox.style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error fetching suggestions:', error));
+        }
     </script>
 
     <script src="{{ asset('js/jquery.js') }}"></script>
