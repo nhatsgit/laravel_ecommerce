@@ -3,12 +3,21 @@
 @section('content')
     <div class="container mt-3">
         <div>
-            <a class="btn btn-primary mb-3">
-                Add New Product
+            <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-3">
+                Thêm sản phẩm mới
             </a>
-            <h1>Sản phẩm đang bán</h1>
+            <h1>Danh sách sản phẩm</h1>
         </div>
-
+        <form method="GET" action="{{ route('admin.products.index') }}" class="mb-3">
+            <select name="category" id="status" class="form-control" onchange="this.form.submit()" style="width: 200px;">
+                <option value="">Tất cả</option>
+                @foreach ($categories as $status)
+                    <option value="{{ $status->id }}" {{ request('status') == $status->id ? 'selected' : '' }}>
+                        {{ $status->name }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
         <table class="table table-bordered table-hover">
             <thead class="table-dark">
                 <tr>
@@ -18,7 +27,6 @@
                     <th>Mô tả</th>
                     <th>Loại</th>
                     <th>Ảnh Đại Diện</th>
-                    <th>Ảnh Minh Họa</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -31,7 +39,7 @@
                         <td>{{ $product->description }}</td>
                         <td>{{ $product->category->name }}</td>
                         <td>
-                            <img src="{{ asset($product->imgUrl) }}" width="100" height="100">
+                            <img src="{{ asset($product->img_url) }}" width="100" height="100">
                         </td>
                         {{-- <td>
                         @foreach ($product->productImages as $image)
@@ -39,9 +47,24 @@
                         @endforeach
                     </td> --}}
                         <td>
-                            {{-- <a href="{{ route('products.shop.edit', $product->id) }}" class="btn btn-success btn-sm">Sửa</a>
-                        <a href="{{ route('products.shop.hide', $product->id) }}" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Are you sure?')">Ẩn</a> --}}
+                            <a href="{{ route('admin.products.edit', $product->id) }}" style="background-color: blue"
+                                class="btn btn-primary btn-sm">Xem
+                                chi tiết</a>
+                            <form action="{{ route('admin.products.softdelete', $product->id) }}" method="POST"
+                                class="d-inline">
+                                @csrf
+
+                                @if ($product->da_an)
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Hiện sản phẩm
+                                    </button>
+                                @else
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        Ẩn sản phẩm
+                                    </button>
+                                @endif
+
+                            </form>
                         </td>
                     </tr>
                 @endforeach

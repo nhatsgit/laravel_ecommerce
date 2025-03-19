@@ -124,8 +124,8 @@
                                         <li><a href="login.html">Login</a></li>
                                     </ul>
                                 </li> --}}
-                                    <li><a href="{{ route('products.index') }}">Sản phẩm</a></li>
-                                    <li><a href="{{ route('myorders') }}">Đơn hàng</a></li>
+                                    <li><a href="{{ route('admin.products.index') }}">Sản phẩm</a></li>
+                                    <li><a href="{{ route('admin.myorders') }}">Đơn hàng</a></li>
 
                                     <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
                                     <li><a href="contact-us.html">Contact</a></li>
@@ -154,26 +154,51 @@
                         @endif
 
                     </div>
-                    <div class="col-sm-3">
-                        <form action="{{ route('products.index') }}" method="GET" style="position: relative;">
-                            <input type="text" id="searchInput" name="keyword" class="form-control"
-                                style="width: 270px; padding-right: 45px;" placeholder="Tìm kiếm sản phẩm..."
-                                value="{{ request('keyword') }}" oninput="fetchSuggestions()">
+                    @if (auth()->check() && auth()->user()->role === 'admin')
+                        <div class="col-sm-3">
+                            <form action="{{ route('admin.products.index') }}" method="GET"
+                                style="position: relative;">
+                                <input type="text" id="searchInput" name="keyword" class="form-control"
+                                    style="width: 270px; padding-right: 45px;" placeholder="Tìm kiếm sản phẩm..."
+                                    value="{{ request('keyword') }}" oninput="fetchSuggestions()">
 
-                            <button type="submit"
-                                style="position: absolute; right: 0; top: 0; height: 100%; width: 40px; 
+                                <button type="submit"
+                                    style="position: absolute; right: 0; top: 0; height: 100%; width: 40px; 
             border: none; background: #f0f0f0; cursor: pointer; display: flex; 
             align-items: center; justify-content: center;">
-                                <i class="fa fa-search"></i>
-                            </button>
+                                    <i class="fa fa-search"></i>
+                                </button>
 
-                            <ul id="suggestions"
-                                style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; 
+                                <ul id="suggestions"
+                                    style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; 
             border: 1px solid #ddd; list-style: none; padding: 5px; margin: 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 9999;">
-                            </ul>
-                        </form>
-                    </div>
+                                </ul>
+                            </form>
+                        </div>
+                    @else
+                        <div class="col-sm-3">
+                            <form action="{{ route('products.index') }}" method="GET" style="position: relative;">
+                                <input type="text" id="searchInput" name="keyword" class="form-control"
+                                    style="width: 270px; padding-right: 45px;" placeholder="Tìm kiếm sản phẩm..."
+                                    value="{{ request('keyword') }}" oninput="fetchSuggestions()">
+
+                                <button type="submit"
+                                    style="position: absolute; right: 0; top: 0; height: 100%; width: 40px; 
+            border: none; background: #f0f0f0; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+
+                                <ul id="suggestions"
+                                    style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; 
+            border: 1px solid #ddd; list-style: none; padding: 5px; margin: 0; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 9999;">
+                                </ul>
+                            </form>
+                        </div>
+                    @endif
+
 
 
                 </div>

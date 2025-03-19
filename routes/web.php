@@ -48,8 +48,13 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products/{id}', 'show')->name('products.show'); // Chi tiết sản phẩm
 });
 Route::controller(ProductManagementController::class)->group(function () {
+    Route::get('/admin/products/edit/{id}', 'edit')->name('admin.products.edit');
+    Route::post('/admin/products/update/{id}',  'update')->name('admin.products.update');
+    Route::get('/admin/products/create',  'create')->name('admin.products.create');
+    Route::post('/admin/products/store',  'store')->name('admin.products.store');
     Route::get('/admin/products', 'index')->name('admin.products.index'); // Danh sách sản phẩm
     Route::get('/admin/products/{id}', 'show')->name('admin.products.show'); // Chi tiết sản phẩm
+    Route::post('/admin/products/softdelete/{id}',  'softDelete')->name('admin.products.softdelete');
 });
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index'); // Danh sách sản phẩm
