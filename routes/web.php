@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/myorders', [OrderManagementController::class, 'index'])->name('admin.myorders');
+    Route::get('/admin/revenue', [OrderManagementController::class, 'revenue'])->name('admin.revenue');
     Route::post('/admin/myorders/updateStatus/{id}', [OrderManagementController::class, 'updateStatus'])->name('admin.myorders.updateStatus');
 });
 Route::controller(CartController::class)->group(function () {

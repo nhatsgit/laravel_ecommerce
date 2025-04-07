@@ -6,18 +6,36 @@
         <h1>Order List</h1>
 
         <!-- Form lọc đơn hàng -->
-        <form method="GET" action="{{ route('myorders') }}" class="mb-3">
-            <label for="status">Lọc theo trạng thái:</label>
-            <select name="status" id="status" class="form-control" onchange="this.form.submit()" style="width: 200px;">
-                <option value="">Tất cả</option>
-                @foreach ($orderStatuses as $status)
-                    <option value="{{ $status->id }}" {{ request('status') == $status->id ? 'selected' : '' }}>
-                        {{ $status->ten_trang_thai }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
+        <form method="GET" action="{{ route('myorders') }}" class="mb-3 d-flex align-items-end gap-3">
+            <div>
+                <label for="status">Trạng thái:</label>
+                <select name="status" id="status" class="form-control" style="width: 200px;">
+                    <option value="">Tất cả</option>
+                    @foreach ($orderStatuses as $status)
+                        <option value="{{ $status->id }}" {{ request('status') == $status->id ? 'selected' : '' }}>
+                            {{ $status->ten_trang_thai }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
+            <div>
+                <label for="from_date">Từ ngày:</label>
+                <input type="date" name="from_date" id="from_date" class="form-control" style="width: 200px;"
+                    value="{{ request('from_date') }}">
+            </div>
+
+            <div>
+                <label for="to_date">Đến ngày:</label>
+                <input type="date" name="to_date" id="to_date" class="form-control" value="{{ request('to_date') }}"
+                    style="width: 200px;">
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Lọc</button>
+                <a href="{{ route('myorders') }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
         <!-- Bảng danh sách đơn hàng -->
         <table class="table table-bordered table-hover">
             <thead>

@@ -61,7 +61,7 @@
             </div>
         </section>
         @if (session('cart') && count(session('cart')) > 0)
-            <h1>Place Your Order</h1>
+            <h1>Chi tiết thanh toán</h1>
             <form action="{{ route('myorders.create') }}" method="post">
                 @csrf
                 <div class="mb-3">
@@ -146,7 +146,7 @@
                     Tổng thanh toán: {{ number_format($total, 0, ',', '.') }}₫
                 </h3>
 
-                <button type="submit" class="btn btn-primary">Submit Order</button>
+                <button type="submit" class="btn btn-primary">Thanh toán</button>
             </form>
         @endif
     </section>

@@ -6,7 +6,7 @@
             <div class="breadcrumbs">
                 <ol class="breadcrumb">
                     <li><a href="{{ route('home') }}">Home</a></li>
-                    <li class="active">Shopping Cart</li>
+                    <li class="active">Giỏ Hàng</li>
                 </ol>
             </div>
 

@@ -6,7 +6,7 @@
             <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-3">
                 Thêm sản phẩm mới
             </a>
-            <h1>Danh sách sản phẩm</h1>
+            <h1>Quản lý sản phẩm của shop</h1>
         </div>
         <form method="GET" action="{{ route('admin.products.index') }}" class="mb-3">
             <select name="category" id="status" class="form-control" onchange="this.form.submit()" style="width: 200px;">

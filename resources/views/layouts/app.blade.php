@@ -127,7 +127,7 @@
                                     <li><a href="{{ route('admin.products.index') }}">Sản phẩm</a></li>
                                     <li><a href="{{ route('admin.myorders') }}">Đơn hàng</a></li>
 
-                                    <li><a href="{{ route('cart.index') }}">Giỏ hàng</a></li>
+                                    <li><a href="{{ route('admin.revenue') }}">Doanh thu</a></li>
                                     <li><a href="contact-us.html">Contact</a></li>
                                 </ul>
                             </div>
